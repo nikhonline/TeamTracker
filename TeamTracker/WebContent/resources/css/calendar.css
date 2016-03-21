@@ -1,0 +1,84 @@
+
+.calendar-btn-L{
+	 color:white;
+	 background-color:green;
+}
+.calendar-btn-T{
+	 color:black;
+	 background-color:#ff9900;
+}
+
+#calendar1 {
+	max-width: 85%;
+	margin: 0 auto;
+	text-align: end;
+	font-color:black;
+}
+
+#calendar1 table {
+	font-size: 1em;
+	border-spacing: 0;
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	border-color: #ddd;
+}
+
+#calendar1 tr {
+	border-width: 1px;
+	padding: 0;
+	vertical-align: top;
+	line-height: 2.5;
+}
+
+#calendar1 td, #calendar1 th {
+	line-height: 2.5;
+	border: 1px solid #ddd;
+
+}
+/* #calendar1 .day  td:first-child, #calendar1  td:last-child { */
+/* 	background: -moz-linear-gradient(150deg, #00b2b3, #00664d); */
+/* } */
+
+#calendar1 .calendar-header {
+	background-color: #444;
+	line-height: 50px;
+	color: #444;
+	border-bottom: 1px solid #444;
+	background: -moz-linear-gradient(center bottom, rgb(189, 189, 189) 39%,
+		rgb(224, 224, 224) 70%);
+	text-shadow: 1px 1px 1px #fff;
+}
+
+#calendar1 .day {
+	background-color: #444;
+	line-height: 50px;
+	color: #444;
+	cursor: pointer;
+	background: linear-gradient(150deg, #00CC99, #009999);
+}
+
+#calendar1 .holiday {
+	background-color: #444;
+	line-height: 50px;
+	color: #444;
+	cursor: pointer;
+	background: -moz-linear-gradient(150deg, #004344, #fbfbfb);
+}
+
+#external-events {
+	text-align: center;
+	float: right;
+	width: 13%;
+	border: 1px solid #ccc;
+	background: #eee;
+}
+
+#external-events h4 {
+	padding-top: 8px;
+}
+
+#external-events .fc-event {
+	margin: 10px 11px 5px 4px;
+}
+

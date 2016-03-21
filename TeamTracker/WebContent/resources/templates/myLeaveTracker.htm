@@ -1,0 +1,136 @@
+<div class="roundedDiv">
+	<h4 style="text-align: center">My Calendar</h4>
+</div>
+<br>
+<div ng-init="init();">
+	<div class="roundedDiv" style="background: #b9d7f6;">
+		<br />
+		<div class="form-inline">
+			<div class="btn-group " ng-init="interval='Q'">
+				<label class="btn btn-primary" ng-model="interval"
+					uib-btn-radio="'M'">Monthly</label> <label class="btn btn-primary"
+					ng-model="interval" uib-btn-radio="'Q'">Quarterly</label> <label class="btn btn-primary"
+					ng-model="interval" uib-btn-radio="'Y'">Yearly</label>
+			</div>
+			<p class="input-group">
+				<input type="text" class="btn btn-default"
+					uib-datepicker-popup="{{change.format}}" ng-model="change.date._d"
+					is-open="change.dateOpened" ng-change="getWeeks()"
+					ng-click="change.dateOpened=!change.dateOpened;" readonly /> <span
+					class="input-group-btn">
+					<button type="button" class="btn btn-default"
+						ng-click="change.dateOpened=!change.dateOpened;">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</button>
+				</span>
+			</p>
+
+		</div>
+		<br>
+		<div ng-show="interval==='Y'">
+		
+		<br><span class="btn btn-success pull-right">Download As CSV</span><br><br>
+			<table class="dataTable datatable-header table table-striped table-hover">
+				<thead>
+					<tr class="calendar-header">
+						<th>Resource/Months</th>
+						<th ng-repeat="month in months" ng-bind="month"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="member in allYrevents">
+						<td ng-bind="member.name"></td>
+						<td ng-repeat="month in range(12)"
+							ng-bind="member[month+1]|keylength" ng-class="{'btn-warning':(member[month+1]|keylength) > 3} "></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div ng-show="interval==='Q'">
+			<span class="btn btn-success pull-right">Download As CSV</span>
+			<table class="dataTable datatable-header table table-striped table-hover">
+				<thead>
+					<tr class="calendar-header">
+						<th>Resource/Quarter</th>
+						<th ng-repeat="quarter in ['Q1','Q2','Q3','Q4']" ng-bind="quarter"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="member in allYrevents">
+						<td ng-bind="member.name"></td>
+						<td ng-bind="(member[4]|keylength)+ (member[5]|keylength) + (member[6]|keylength)"></td>
+						<td ng-bind="(member[7]|keylength)+ (member[8]|keylength) + (member[9]|keylength)"></td>
+						<td ng-bind="(member[10]|keylength)+ (member[11]|keylength) + (member[12]|keylength)"></td>
+						<td ng-bind="(member[1]|keylength)+ (member[2]|keylength) + (member[3]|keylength)"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div ng-show="interval==='M'">
+			<div id='external-events'>
+				<h4>Options</h4>
+				<span class='btn fc-event' ng-init="cat = categories[0]"
+					ng-class="cat.id=='T'?'calendar-btn-T': 'calendar-btn-L'"
+					ng-model="cat.id" draggable>{{cat.title}} ({{ events |
+					keylength:cat.id }})</span> <span class='btn fc-event'
+					ng-init="cat1 = categories[1]"
+					ng-class="cat1.id=='T'?'calendar-btn-T': 'calendar-btn-L'"
+					ng-model="cat1.id" draggable>{{cat1.title}} ({{ events |
+					keylength:cat1.id }})</span>
+			</div>
+			<table id="calendar1" class="table" style="table-layout: fixed;">
+				<thead>
+					<tr class="calendar-header">
+						<th ng-repeat="week in weeks" ng-bind="week"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(i,week) in change.weeks track by $index"
+						ng-init="condition = week.length<6">
+						<td ng-if="i==0 && condition"
+							ng-repeat="day in range(7-week.length)" class="no-bg-color"></td>
+						<td ng-repeat="day in week" droppable ng-model="day" uib-dropdown
+							is-open="btnIsopen"
+							ng-class="holidays[change.month][day]?'holiday': 'day'"
+							ng-mouseup="mouseUp(day)" ng-mousedown="mouseDown(day)"
+							uib-dropdown-toggle><span class="btn btn-sm pull-left">
+								<label>{{day}} <label
+									ng-show="holidays[change.month][day]"
+									ng-bind="'('+holidays[change.month][day] +')'" /></label>
+						</span> <span ng-show="events[day].id" id="single-button"
+							class="btn btn-sm" ng-disabled="disabled"
+							ng-repeat="obj in categories|filter:{id:events[day].id}"
+							ng-class="obj.id=='T'?'calendar-btn-T': 'calendar-btn-L'">
+								<span ng-bind="obj.title" /> <span class="fa fa-remove"
+								ng-click="removeEvent(day);$event.stopPropagation()" />
+						</span>
+							<ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+								<li ng-show="events[day].id"
+									ng-repeat="choice in categories|filter:{id:'!' +events[day].id}"><a
+									href ng-click="events[day].id=choice.id" ng-bind="choice.title" /></li>
+								<li ng-hide="events[day].id" ng-repeat="choice in categories"><a
+									href ng-click="events[day].id=choice.id" ng-bind="choice.title" /></li>
+							</ul></td>
+						<td ng-if="i!=0 && condition"
+							ng-repeat="day in range(7-week.length)" ng-bind=""
+							class="no-bg-color"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</div>
+<script type="text/ng-template" id="myModalContent.html">
+		<div class="modal-body div-centered">
+			<form name="myform" ng-submit="ok()">
+						Leave Type :<select ng-model="item" required class="form-control" style='width:60%;float:right'
+							ng-options="obj as obj.title for obj in categories">
+						</select>
+
+				<br><br>
+				<button class="btn btn-success" type="submit" style='width:50%'
+					ng-disabled="!myform.$dirty || !myform.$valid">OK</button>
+			</form>
+		</div>
+</script>

@@ -1,0 +1,122 @@
+<div class="roundedDiv">
+	<h4 style="text-align: center">Manage Managers Data</h4>
+</div>
+<br>
+<div ng-init="init()">
+	<div class="roundedDiv" style="background: #b9d7f6;">
+		<table datatable="ng" dt-options="dtOptions"
+			dt-column-defs="dtColumnDefs"
+			class="datatable-header table table-striped hover">
+			<thead>
+				<tr>
+					<th>Manager ID</th>
+					<th>Manager Name</th>
+					<th>Email ID</th>
+					<th>Active</th>
+					<th>Projects</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in managers">
+					<td ng-bind="item.managerId"></td>
+					<td ng-bind="item.name" />
+					<td ng-bind="item.email" />
+					<td ng-bind="(archived|filter:{id:item.active})[0].name"></td>
+					<td ng-bind="item.projectIds" />
+					<td>
+						<button type="button" ng-click="open(item,false)"
+							class="btn btn-warning btn-sm">
+							<i class="fa fa-edit"></i>Edit
+						</button>
+						<button type="button" ng-click="deleteManager(item)"
+								class="btn btn-warning btn-sm" ng-disabled="!item.active">
+								<i class="fa fa-times"></i>Delete
+							</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<span class="btn btn-success" ng-click="addNewData()"><i
+			class="fa fa-plus"></i> &nbsp; Add New Manager</span>
+
+	</div>
+
+
+			<script type="text/ng-template" id="myModalContent.html">
+	<form name="myform" ng-submit="ok()">
+		<div class="modal-header">
+			<h4 class="modal-title">Edit Manager Data!</h4>
+		</div>
+
+		<div class="modal-body">
+			<table class="table-striped">
+				<tbody>
+					<tr>
+						<td>Manager ID</td>
+						<td>:</td>
+						<td><input type="text" ng-model="item.managerId" required maxlength="8"
+							class="input-mini form-control"></td>
+					</tr>
+					<tr>
+						<td>Name</td>
+						<td>:</td>
+						<td><input type="text" ng-model="item.name" required maxlength="100"
+							class="input-mini form-control"></td>
+					</tr>
+					<tr>
+						<td>Email</td>
+						<td>:</td>
+						<td><input type="email" ng-model="item.email" required maxlength="100"
+							class="input-mini form-control"></td>
+					</tr>
+					<tr>
+						<td>Active</td>
+						<td>:</td>
+						<td><select ng-model="item.active" required
+							class="form-control"
+							ng-options="obj.id as obj.name for obj in archived">
+						</select></td>
+					</tr>
+					<tr>
+						<td>Project Id</td>
+						<td>:</td>
+						<td>
+
+								<div class="btn-group" dropdown is-open="isopen" ng-init="isopen=false">
+									<button type="button" class="btn form-control" dropdown-toggle
+										ng-disabled="disabled">
+										{{item.projectIds.toString()||'Select Projects'}} <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu"
+										aria-labelledby="single-button">
+										<li ng-class="{'selected': item.projectIds.length ==categories.length}" role="menuitem" 
+ng-click="item.projectIds= categories.concat([])">Select All</li>
+										<li role="menuitem" ng-click="item.projectIds=[]">Clear All</li>
+										<li class="divider"></li>
+										<li role="menuitem" ng-repeat="cat in categories">
+
+										<span  ng-class="{'selected': item.projectIds.indexOf(cat) != -1}" ng-bind="cat"
+ng-click="item.projectIds.indexOf(cat)== -1?item.projectIds.push(cat):item.projectIds.splice(item.projectIds.indexOf(cat),1)">
+</span></li>
+									</ul>
+								</div>
+
+						</td>
+					</tr>
+				</tbody>
+
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit"
+				ng-disabled=" !myform.$valid">Save</button>
+			<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+			<button class="btn btn-info" type="button" ng-click="reset()">
+				<i class="fa fa-undo"></i>Reset
+			</button>
+		</div>
+	</form>
+	</script>
+</div>
+

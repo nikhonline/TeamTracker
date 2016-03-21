@@ -1,0 +1,21 @@
+.nav-tabs>li.active>a, .nav-tabs>li>a {
+	background: #d0d0d0;
+	color: white;
+	padding: 20px;
+	width: 200px;
+	height: 1.5px;
+	text-align: center;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus {
+	border-radius: 110px 310px 5px 5px;
+	background: #556c8a;
+	color: white;
+}
+
+.nav-tabs>li.active>a:hover, 
+.nav-tabs>li>a:hover {
+	border-radius: 110px 310px 5px 5px;
+	background: green;
+	color: white;
+}

@@ -1,0 +1,35 @@
+<div class="roundedDiv">
+	<h4 style="text-align: center">View</h4>
+</div>
+<br>
+<div ng-init="init();" ng-controller="ViewSrMgrCtrl">
+	<div class="roundedDiv" style="background: #b9d7f6;">
+		<uib-accordion>
+		    <uib-accordion-group is-open="cat1Open">
+		      <uib-accordion-heading>
+		        <div>Chart Category 1<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': cat1Open, 'glyphicon-chevron-right': !cat1Open}"></i></div>
+		      </uib-accordion-heading>
+		      <div>
+			<span>Types :</span> <select ng-model="chartType"
+				ng-change="chartTypeChange(chartType)">
+				<option ng-repeat="type in chartTypes" value="{{type}}"
+					ng-bind="type"></option>
+			</select> <br> <br>
+			<uib-tabset>
+				    <uib-tab heading="Chart 1">Chart 1</uib-tab>
+				   	<uib-tab heading="Chart 2">Chart 2</uib-tab>
+				  </uib-tabset>
+				  <div id="high-chart" style="width:95%;height=80%">
+    				<highchart config="chartConfig" ></highchart></div>
+		      </div>
+		    </uib-accordion-group>
+		    <uib-accordion-group is-open="cat2Open">
+		      <uib-accordion-heading>
+		        <div>Chart Category 2<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': cat2Open, 'glyphicon-chevron-right': !cat2Open}"></i></div>
+		      </uib-accordion-heading>
+		      Cat 2 division
+		    </uib-accordion-group>
+	  </uib-accordion>
+		
+	</div>
+</div>

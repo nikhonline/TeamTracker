@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Vendor: Pivotal Software, Inc.
+Implementation-Title: Team Tracker
+Implementation-Version: 1.0.0
+Implementation-Vendor-Id: com.mindtree
+Build-Jdk: 1.7.0_71
+Built-By: M1031956
+Created-By: Maven Integration for Eclipse
+

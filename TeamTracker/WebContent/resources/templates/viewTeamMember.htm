@@ -1,0 +1,355 @@
+<div class="roundedDiv">
+	<h4 style="text-align: center" ng-hide="queryParam.params.history">Manage
+		Team Members</h4>
+	<h4 style="text-align: center" ng-show="queryParam.params.history">Team
+		Members History</h4>
+</div>
+<br>
+<div ng-init="init();">
+	<div class="roundedDiv" style="background: #b9d7f6;">
+	<div class="form-inline">
+<!-- 	Mindtree Manager Filter -->
+			<div class="btn-group" uib-dropdown is-open="isMgropen"
+				ng-init="isMgropen=false;">
+				<button read-only class="btn form-control" uib-dropdown-toggle
+					ng-disabled="disabled" tooltip="Filter for specific Managers">
+					Filter Mindtree Manager <span class="caret"></span>
+				</button>
+				<ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+					<li role="menuitem"><a
+						ng-class="{'selected': selectedMgrs.length ==managers.length}"
+						ng-click="selectedMgrs= managers.concat([])">Select All</a></li>
+					<li role="menuitem"><a ng-click="selectedMgrs=[]">Clear
+							All</a></li>
+					<li class="divider"></li>
+					<li role="menuitem" ng-repeat="mgr in managers"><a
+						ng-class="{'selected': selectedMgrs.indexOf(mgr) != -1}"
+						ng-bind="mgr"
+						ng-click="selectedMgrs.indexOf(mgr)== -1?selectedMgrs.push(mgr):selectedMgrs.splice(selectedMgrs.indexOf(mgr),1)">
+					</a></li>
+				</ul>
+			</div>
+		<!-- 	Filter Projects -->
+		
+			<div class="btn-group div-border" uib-dropdown is-open="isopen"
+				ng-init="isopen=false;">
+				<button read-only class="btn form-control" uib-dropdown-toggle
+					ng-disabled="disabled" tooltip="Filter for specific projects">
+					Filter Projects <span class="caret"></span>
+				</button>
+				<ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+					<li role="menuitem"><a
+						ng-class="{'selected': selectedPros.length ==allProjects.length}"
+						ng-click="selectedPros= allProjects.concat([])">Select All</a></li>
+					<li role="menuitem"><a ng-click="selectedPros=[]">Clear
+							All</a></li>
+					<li class="divider"></li>
+					<li role="menuitem" ng-repeat="proj in allProjects"><a
+						ng-class="{'selected': selectedPros.indexOf(proj) != -1}"
+						ng-bind="proj"
+						ng-click="selectedPros.indexOf(proj)== -1?selectedPros.push(proj):selectedPros.splice(selectedPros.indexOf(proj),1)">
+					</a></li>
+
+				</ul>
+				<span class="btn btn-info" ng-repeat="proj in selectedPros">{{proj}}
+					<span class="fa fa-remove"
+					ng-click="selectedPros.splice(selectedPros.indexOf(proj),1)"></span>
+				</span>
+			</div>
+		</div>
+		<br>
+		<!-- 		Team member date Interval -->
+		<div class="form-inline">
+			<p ng-hide="queryParam.params.history" class="input-group">Interval:</p>
+			<p ng-show="queryParam.params.history" class="input-group">Start
+				Date:</p>
+			<!-- 			Start Date -->
+			<div class="input-group">
+				<p class="input-group">
+					<input type="text" class="btn btn-default"
+						uib-datepicker-popup="{{change.format}}"
+						ng-model="queryParam.params.sdate" is-open="change.sdate"
+						ng-click="change.sdate=!change.sdate;" show-button-bar="false"
+						readonly ng-change="getTeamData()" /> <span
+						class="input-group-btn">
+						<button type="button" class="btn btn-default"
+							ng-click="change.sdate=!change.sdate;">
+							<i class="glyphicon glyphicon-calendar"></i>
+						</button>
+					</span>
+				</p>
+			</div>
+			<!-- End Date -->
+			<div class="input-group" ng-show="queryParam.params.history">
+				<p class="input-group">
+					End Date:<input type="text" class="btn btn-default"
+						uib-datepicker-popup="dd-MMM-yyyy"
+						ng-model="queryParam.params.edate" is-open="change.edate"
+						ng-click="edateChange()" readonly ng-change="getTeamData()"
+						min-date="queryParam.params.sdate" close-text="Close" /> <span
+						class="input-group-btn">
+						<button type="button" class="btn btn-default"
+							ng-click="edateChange()">
+							<i class="glyphicon glyphicon-calendar"></i>
+						</button>
+					</span>
+				</p>
+			</div>
+
+			Billable : <select ng-model="billable" class="form-control"
+				tooltip="Filter for Billable data" ng-init="billable='All'">
+				<option value="All">All</option>
+				<option ng-repeat="obj in yesOrNo" value="{{obj.id}}">{{obj.name}}</option>
+			</select>
+
+			MID :<input type="text" ng-model="queryParam.params.uid"
+				numeric-only maxlength="7" class="input-mini form-control"
+				ng-change="queryParam.params.mid=null;"
+				ng-keypress="($event.which === 13)?getTeamData():0"
+				placeholder="numeric only"
+				tooltip="search to fetch particular team member details;press enter to search">
+		</div>
+		<br>
+
+		<hr>
+		<form class="form-inline">
+			<table datatable="ng" dt-options="dtOptions"
+				dt-column-defs="dtColumnDefs"
+				class="datatable-header table table-striped hover table-hover dt-responsive">
+				<thead>
+					<tr>
+						<th>Mindtree ID</th>
+						<th>Name</th>
+						<th>PeopleSoft ID</th>
+						<th>Months Of Experience</th>
+						<th>Project ID</th>
+						<th>Project Model</th>
+						<th>Matrix Manager</th>
+						<th>Group Head</th>
+						<th>Tech Cabinet Lead</th>
+						<th>AOL Area</th>
+						<th>Team</th>
+						<th>Cost Center</th>
+						<th>Project Role</th>
+						<th>Billable</th>
+						<th>MindTree Manager</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Working Status</th>
+						<th>Comments</th>
+						<th
+							ng-show='queryParam.params.history || queryParam.params.mid !=null ||queryParam.params.mid ==="All"'>Active</th>
+						<th
+							ng-hide='queryParam.params.history || queryParam.params.mid !=null ||queryParam.params.mid ==="All"'>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in users">
+						<td ng-bind="item.mid.length===0?'':'M'+item.mid"></td>
+						<td ng-bind="item.name" />
+						<td ng-bind="item.pplSftId" />
+						<td ng-bind="item.monthsOfExp" />
+						<td ng-bind="item.projectId" />
+						<td ng-bind="item.projectModel" />
+						<td ng-bind="item.matrixManager" />
+						<td ng-bind="item.groupHead" />
+						<td ng-bind="item.techCabinetLead" />
+						<td ng-bind="item.AOLArea" />
+						<td ng-bind="item.team" />
+						<td ng-bind="item.costCenter" />
+						<td ng-bind="item.projectRole" />
+						<td ng-bind="(yesOrNo|filter:{id:item.billable})[0].name" />
+						<td ng-bind="item.mindtreeManager" />
+						<td ng-bind="item.startDate" />
+						<td ng-bind="item.endDate" />
+						<td ng-bind="item.workingStatus" />
+						<td ng-class="item.comments.length > 100?'dots': ''" >
+						<div class="comments" ng-bind="item.comments"tooltip="{{item.comments}}"></div>
+						</td>
+						<td
+							ng-show="queryParam.params.history || queryParam.params.mid !=null"
+							ng-bind="(yesOrNo|filter:{id:item.active})[0].name" />
+						<td
+							ng-hide="queryParam.params.history || queryParam.params.mid !=null||queryParam.params.mid ==='All'">
+							<select ng-model="action" 
+							ng-change="doAction(action,item,false,$index);action=''">
+								<option value="">None</option>
+								<option value="1">Edit</option>
+								<option value="2">Clone</option>
+								<option value="3">Delete</option>
+						</select>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+		</form>
+
+		<span ng-hide="queryParam.params.history" class="btn btn-success"
+			ng-click="addNewTeamMember(null)"><i class="fa fa-plus"></i>
+			&nbsp; Add New Team Member</span>
+	</div>
+	<script type="text/ng-template" id="myModalContent.html">
+<form name="myform" ng-submit="ok()">
+<div class="modal-header">
+            <h4 class="modal-title">Manage Team Member!</h4>
+        </div>
+
+	<div class="modal-body">
+		<table class="table-hover padding">
+				<tbody>
+					<tr>
+						<td>Mindtree ID</td>
+						<td>:</td>
+						<td><input type="text" ng-model="item.mid" numeric-only  maxlength="7"
+							class="input-mini form-control" placeholder="MID numeric only" ></td>
+						<td style="width:6%"></td>
+						<td class="required">Name</td>
+						<td>:</td>
+						<td><input type="text" ng-model="item.name" required  maxlength="100"
+							class="input-mini form-control"></td>
+					</tr>
+					<tr>
+						<td>PeopleSoft ID</td>	
+						<td>:</td>
+						<td><input type="text" ng-model="item.pplSftId" maxlength="6"
+							class="input-mini form-control"></td>
+						<td></td>
+						<td>Months Of Experience</td>	
+						<td>:</td>
+						<td><input type="text" ng-model="item.monthsOfExp" numeric-only
+							class="input-mini form-control"></td>
+					</tr>
+					<tr>
+						<td class="required">Project ID</td>
+						<td>:</td>
+						<td><select ng-model="item.projectId" class="form-control" required
+							ng-options="obj as obj for obj in projects">
+						</select></td>
+						<td></td>
+						<td class="required">Project Model</td>
+						<td>:</td>
+						<td><select ng-model="item.projectModel" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'PM'}">
+						</select></td>
+					</tr>
+					<tr>
+						<td class="required">Group Head</td>
+						<td>:</td>
+						<td><select ng-model="item.groupHead" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'GH'}">
+						</select></td>
+						<td></td>
+						<td class="required">Tech Cabinet Lead</td>
+						<td>:</td>
+						<td><select ng-model="item.techCabinetLead" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'TCL'}">
+						</select></td>
+					</tr>
+					<tr>
+						<td class="required">AOL Area</td>
+						<td>:</td>
+						<td><select ng-model="item.AOLArea" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'AA'}">
+						</select></td>
+						<td></td>
+						<td class="required">Team</td>
+						<td>:</td>
+						<td><select ng-model="item.team" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'TM'}">
+						</select></td>
+					</tr>
+					<tr>
+						<td class="required">Cost Center</td>
+						<td>:</td>
+						<td><select ng-model="item.costCenter" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'CC'}">
+						</select></td>
+						<td></td>
+						<td class="required">Project Role</td>
+						<td>:</td>
+						<td><select ng-model="item.projectRole" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'PR'}">
+						</select></td>
+					</tr>
+					<tr>
+						<td class="required">Billable</td>
+						<td>:</td>
+						<td><select ng-model="item.billable" class="form-control" required
+							ng-options="obj.id as obj.name for obj in yesOrNo">
+						</select></td>
+						<td></td>
+						<td class="required">MindTree Manager</td>
+						<td>:</td>
+						<td><select ng-model="item.mindtreeManager" class="form-control" required
+							ng-options="obj as obj for obj in managers">
+						</select></td>
+					</tr>
+					<tr>
+						<td class="required">Matrix Manager</td>
+						<td>:</td>
+						<td><select ng-model="item.matrixManager" class="form-control" required
+							ng-options="obj.VALUE as obj.VALUE for obj in appdata|filter:{ID:'MM'}">
+						</select></td>
+						
+					</tr>
+					<tr>
+						<td class="required">Start Date</td>
+						<td>:</td>
+						<td>
+							<p class="input-group">
+								<input type="text" class="btn btn-default" required
+									ng-init="status.startDateOpened=false"
+									ng-click="openStartDate($event)" datepicker-popup="{{format}}"
+									ng-model="item.startDate" is-open="status.startDateOpened"
+									show-button-bar="false" max-date="item.endDate" ng-required="true" ng-change="updateStartDate()"
+									readonly/> <span class="input-group-btn">
+									<button type="button" class="btn btn-default"
+										ng-click="openStartDate($event)">
+										<i class="glyphicon glyphicon-calendar"></i>
+									</button>
+								</span>
+							</p>
+						</td>
+						<td></td>
+						<td>End Date</td>
+						<td>:</td>
+						<td><p class="input-group"
+								ng-init="status.endDateOpened=false">
+								<input type="text" class="btn btn-default"
+									ng-click="openEndDate($event)" datepicker-popup="{{format}}"
+									ng-model="item.endDate" is-open="status.endDateOpened"
+									min-date="item.startDate"  ng-change="updateEndDate();item.workingStatus=''" readonly  /> <span
+									class="input-group-btn"> <span type="button"
+									class="btn btn-default" ng-click="openEndDate($event)">
+										<i class="glyphicon glyphicon-calendar"></i>
+								</span>
+								</span>
+							</p></td>
+					</tr>
+					<tr>
+						<td ng-class="{'required' :item.endDate !== null}">Working Status</td>	
+						<td>:</td>
+						<td>
+<select name="singleSelect" ng-model="item.workingStatus" class="form-control" ng-required="item.endDate !== null ">
+      <option ng-hide="item.endDate !== null" value="None">None</option>
+      <option ng-repeat="obj in appdata|filter:{ID:'WS'}" value="{{obj.VALUE}}" >{{obj.VALUE}}</option>
+    </select>
+</td>
+						<td></td>
+						<td>Comments</td>
+						<td>:</td>
+						<td><input type="text" ng-model="item.comments" maxlength="500"
+							class="input-mini form-control"></td>
+					</tr>
+				</tbody>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="submit" ng-disabled="!myform.$dirty || !myform.$valid" >Save</button>
+		<button class="btn btn-warning" type="button" ng-click="reset();cancel()">Cancel</button>
+		<button class="btn btn-info" type="button" ng-click="reset()"><i class="fa fa-undo"></i>Reset</button>
+	</div>
+</form>
+</script>
+</div>

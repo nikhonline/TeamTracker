@@ -1,0 +1,143 @@
+<div class="roundedDiv">
+	<h4 style="text-align: center">Manage Users</h4>
+</div>
+<br>
+<div ng-init="init()">
+	<div class="roundedDiv" style="background: #b9d7f6;">
+	
+		<form class="form-inline">
+			<table datatable="ng" dt-options="dtOptions"
+				dt-column-defs="dtColumnDefs" class="datatable-header table table-striped hover">
+				<thead>
+					<tr>
+						<th>User Name</th>
+						<th>User Id</th>
+						<th>User Role</th>
+						<th>Active</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in users">
+						<td ng-bind="item.name"/>
+						<td ng-bind="item.userId"/>
+						<td ng-bind="item.role"/>
+						<td ng-bind="(archived|filter:{id:item.active})[0].name"></td>
+						<td>
+							<button type="button" ng-click="open(item,false)"
+								class="btn btn-warning btn-sm">
+								<i class="fa fa-edit"></i>Edit
+							</button>
+							<button type="button" ng-click="deleteUser(item)"
+								class="btn btn-warning btn-sm" ng-disabled="!item.active">
+								<i class="fa fa-times"></i>Delete
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		
+		<span class="btn btn-success" ng-click="addNewUser()"><i class="fa fa-plus"></i> &nbsp; Add New User</span>
+	</div>
+<script type="text/ng-template" id="myModalContent.html">
+<form name="myform" ng-submit="ok()">
+<div class="modal-header">
+            <h4 class="modal-title">Edit the User!</h4>
+        </div>
+
+	<div class="modal-body">
+		<table class="table-striped">
+			<tbody>
+				<tr>
+					<td>User Name</td><td>:</td>
+					<td>
+						<input type="text" ng-model="item.name" required class="input-mini form-control" maxlength="100" >
+					</td>
+				</tr>
+				<tr>
+					<td>User Id</td><td>:</td>
+					<td ng-bind="item.userId">
+					</td>
+				</tr>
+				<tr>
+					<td>User Role</td><td>:</td>
+					<td><select ng-model="item.role" required class="form-control"
+						ng-options="obj.id as obj.name for obj in categories">
+					</select></td>
+				</tr>
+				<tr>
+					<td>Active</td><td>:</td>
+					<td><select ng-model="item.active" required class="form-control"
+						ng-options="obj.id as obj.name for obj in archived">
+					</select></td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="submit" ng-disabled="!myform.$dirty || !myform.$valid" >Save</button>
+		<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+		<button class="btn btn-info" type="button" ng-click="reset()"><i class="fa fa-undo"></i>Reset</button>
+	</div>
+</form>
+</script> 
+
+<script type="text/ng-template" id="newUserContent.html">
+<form name="myform" ng-submit="ok()">
+<div class="modal-header">
+            <h4 class="modal-title">Add New User!</h4>
+        </div>
+
+	<div class="modal-body">
+		<table class="table-striped" ng-init="showpassword=false">
+			<tbody>
+				<tr>
+					<td>User Name</td><td>:</td>
+					<td>
+						<input type="text" ng-model="item.name" required class="input-mini form-control" maxlength="100" >
+					</td>
+				</tr>
+				<tr>
+					<td>User Id</td><td>:</td>
+					<td>
+						<input type="text" ng-model="item.userId" required class="input-mini form-control" maxlength="8" >
+					</td>
+				</tr>
+				<tr>
+					<td>User Role</td><td>:</td>
+					<td><select ng-model="item.role" required class="form-control"
+						ng-options="obj.id as obj.name for obj in categories">
+					</select></td>
+				</tr>
+				<tr>
+					<td>Active</td><td>:</td>
+					<td><select ng-model="item.active" required class="form-control"
+						ng-options="obj.id as obj.name for obj in archived">
+					</select></td>
+				</tr>
+				<tr>
+					<td>Password</td><td>:</td>
+					<td><input type="{{showpassword ? 'text' : 'password'}}" ng-model="item.password" required class="input-mini form-control" maxlength="8">
+					</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" ng-model="showpassword" class="input-mini">Show Password</td>
+				</tr>
+ 
+			</tbody>
+
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="submit" ng-disabled="!myform.$dirty || !myform.$valid" >Save</button>
+		<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+		<button class="btn btn-info" type="button" ng-click="reset()"><i class="fa fa-undo"></i>Reset</button>
+	</div>
+</form>
+</script> 
+
+
+</div>
+

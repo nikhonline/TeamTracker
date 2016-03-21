@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{36}:%L - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="LOGFILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="append" value="true" />
+		<param name="maxFileSize" value="300KB" />
+		<param name="file" value="${catalina.home}/logs/team_tracker.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{36}:%L - %m%n" />
+			<param name="Filter" value="org.apache.catalina.*" />
+			<param name="Filter" value="org.springframework.*" />
+		</layout>
+	</appender>
+
+	<root>
+		<level value="ERROR" />
+		<!-- <appender-ref ref="STDOUT" /> -->
+		<appender-ref ref="LOGFILE" />
+	</root>
+</log4j:configuration>
+ 
